@@ -92,6 +92,7 @@ components:
             Details related to the player that occupies a roster spot.
           $ref: '#/components/schemas/RosterPlayerPoolEntry'
         status:
+          type: string
           enum:
             - NORMAL
 
