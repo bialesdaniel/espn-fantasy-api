@@ -14,9 +14,9 @@ components:
             teams:
               type: array
               items:
-                $ref: '#/components/schemas/MRosterLeagueTeam'
+                $ref: '#/components/schemas/Team'
 
-    MRosterLeagueTeam:
+    Team:
       description:
         The league team that is returned when the view query parameter is
         mRoster.
@@ -29,8 +29,9 @@ components:
           minimum: 1
           example: 5
         roster:
+          description: The details of the team's roster.
 
-    TeamRoster:
+    Roster:
       description: The roster of a team in the league.
       type: object
       properties:
@@ -41,8 +42,129 @@ components:
           description: A list of the players on the team.
           type: array
           items:
-            $ref: './shared-components.yml#/components/schemas/Player'
+            $ref: '#/components/schemas/RosterEntry'
         tradeReservedEntries:
           type: number
-          format: float
+          format: integer
 
+    RosterEntry:
+      description:
+        An description of the filled roster position. This includes when the
+        roster spot was filled and they player that was acquired.
+      type: object
+      properties:
+        acquisitionDate:
+          description:
+            The date the player was acquired to fill the roster spot. The date
+            is formatted in milliseconds.
+          type: number
+          format: integer
+          example: 1634001405127
+        acquisitionType:
+          description: How the player was aquired to fill the roster spot.
+          $ref: './shared-components.yml#/components/schemas/AcquisitionType'
+        injuryStatus:
+          $ref: './shared-components.yml#/components/schemas/InjuryStatus'
+        lineupSlotId:
+          description:
+            The position in the fantasy team that the player currently occupies.
+          type: number
+          format: integer
+          minimum: 1
+          example: 5
+        pendingTransationIds:
+          description:
+          type: array
+          items:
+            description: The uuid of the transaction associated with the player.
+            type: string
+            format: uuid
+            example: efa9b89b-f7e5-4b41-ab11-6560b3baaf7c
+          nullable: true
+        playerId:
+          description: The id of the playrer that occupies the roster spot.
+          type: number
+          format: integer
+          example: 3059318
+        playerPoolEntry:
+          description:
+            Details related to the player that occupies a roster spot.
+          $ref: '#/components/schemas/RosterPlayerPoolEntry'
+        status:
+          enum:
+            - NORMAL
+
+    RosterPlayerPoolEntry:
+      description: Information related to a player's role on a fantasy team.
+      type: object
+      properties:
+        appliedStatTotal:
+          type: number
+          format: float
+        id:
+          description: The id of the player.
+          type: number
+          format: integer
+          example: 3059318
+        keeperValue:
+          description:
+            The position in the team's keeper list that the player occupies. If
+            0 the player is not on the team's keeper list.
+          type: number
+          format: integer
+          example: 1
+        keeperValueFuture:
+          type: number
+          format: integer
+          example: 1
+        lineupLocked:
+          type: boolean
+        onTeamId:
+          description:
+            The id of the fantasy team in the league that the player is on.
+          type: number
+          format: number
+          example: 3
+        player:
+          description:
+            Information about the player not related to their spot on a fantasy
+            team's roster.
+          $ref: '#/components/schemas/RosterEntryPlayer'
+        ratings:
+          description:
+            Information about how a player stacks up over different time
+            segments.
+          type: object
+          properties:
+            0:
+              description: The player ratings for the current season to date.
+              $ref: './shared-components.yml#/components/schemas/PlayerRatings'
+            1:
+              description: The player ratings for the past 7 days.
+              $ref: './shared-components.yml#/components/schemas/PlayerRatings'
+            2:
+              description: The player ratings for the past 15 days.
+              $ref: './shared-components.yml#/components/schemas/PlayerRatings'
+            3:
+              description: The player ratings for the past 30 days.
+              $ref: './shared-components.yml#/components/schemas/PlayerRatings'
+        rosterLocked:
+          description: Whether the player has been locked into their roster spot for the day.
+          type: boolean
+        status:
+          $ref: './shared-components.yml#/components/schemas/PlayerPoolEntryStatus'
+        tradeLocked:
+          type: boolean
+
+    RosterEntryPlayer:
+      description:
+        The player details provided when the view query parameter is mRoster.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/PlayerBasic'
+        - type: object
+          properties:
+            seasonOutlook:
+              description:
+                A text description written prior to the season that gives a
+                summary of what to expect from the player during the season.
+              type: string

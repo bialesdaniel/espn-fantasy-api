@@ -1,5 +1,14 @@
 components:
   schemas:
+    AcquisitionType:
+      description:
+        An enum describing how a player was aquired to fill a roster spot.
+      type: string
+      enum:
+        - DRAFT
+        - ADD
+        - TRADE
+
     BasicLeagueMember:
       description: The users that are part of the league.
       type: object
@@ -43,7 +52,7 @@ components:
           type: number
           format: float
           minimum: 0.0
-        2: 
+        2:
           description: Steals (STL).
           type: number
           format: float
@@ -232,6 +241,12 @@ components:
         inProgress:
           type: boolean
 
+    InjuryStatus:
+      type: string
+      enum:
+        - NORMAL
+        - FUTURE_FROM_IR
+
     LeagueStatusBasic:
       type: object
       properties:
@@ -328,7 +343,7 @@ components:
             type: string
             format: uuid
 
-    PlayerBasic: 
+    PlayerBasic:
       description: An object describing a professional player.
       type: object
       properties:
@@ -338,43 +353,55 @@ components:
           description: Whether the player can be dropped.
           type: boolean
         eligibleSlots:
-          description: The position slots in the league that the player is elibile to be placed in.
+          description:
+            The position slots in the league that the player is elibile to be
+            placed in.
           type: array
           items:
             type: integer
         firstName:
           description: The first name of the player.
           type: string
+          example: Precious
         fullName:
           description: The full name of the player.
+          type: string
+          example: Precious Achiuwa
         id:
           description: The unique identifier for the player.
           type: integer
+          format: uuid
+          example: 4431679
         lastName:
           description: The last name of the player.
           type: string
+          example: Achiuwa
         ownership:
-          description: Aggregate information about the players ownership across ESPN leagues.
+          description:
+            Aggregate information about the players ownership across ESPN
+            leagues.
           $ref: '#/components/schemas/PlayerOwnership'
         proTeamId:
           description: An identifier indicating which NBA team the player is on.
           type: integer
-        seasonOutlook:
-          description: A text description written prior to the season that gives a summary of what to expect from the player during the season.
-          type: string
-        stats:
-          type: array
+          minimum: 0
+          example: 28
+        universeId:
+          type: integer
 
     PlayerOwnership:
-      description: Aggregate information about a players ownership across ESPN leagues.
+      description:
+        Aggregate information about a players ownership across ESPN leagues.
       type: object
       properties:
         auctionValueAverage:
-          description: The average price paid for the player in a auction league drafts.
+          description:
+            The average price paid for the player in a auction league drafts.
           type: number
           format: float
         averageDraftPosition:
-          description: The average pick the player was drafted in traditional drafts.
+          description:
+            The average pick the player was drafted in traditional drafts.
           type: number
           format: float
           minimum: 1.0
@@ -382,11 +409,45 @@ components:
           type: number
           format: float
         percentOwned:
-          description: The percent of leagues where the player is owned by a manager.
+          description:
+            The percent of leagues where the player is owned by a manager.
           type: number
           format: float
           minimum: 0.0
         percentStarted:
           type: number
           format: float
-      
+
+    PlayerPoolEntryStatus:
+      enum:
+        - ONTEAM
+
+    PlayerRatings:
+      description:
+        Information about how a player stacks up over a specific time period.
+      type: object
+      properties:
+        positionalRanking:
+          description:
+            How the player is ranked within its position over the time period.
+            This is most likely based on total fantasy points accumulated during
+            the time period.
+          type: number
+          format: integer
+          example: 9
+        totalRanking:
+          description:
+            How the player is ranked against all other players over the time
+            period. This is most likely based on the total fantasy points
+            accumulated during the time period.
+          type: number
+          format: integer
+          example: 27
+        totalRating:
+          description:
+            The total fantasy points accumulated during the time time period.
+          type: number
+          format: float
+          example: 119.0
+
+

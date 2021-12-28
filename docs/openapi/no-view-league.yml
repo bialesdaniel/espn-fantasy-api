@@ -22,4 +22,4 @@ components:
             teams:
               type: array
               items:
-                $ref: './shared-components.yml#/components/schemas/BasicLeagueTeam'
+                $ref: './shared-components.yml#/components/schemas/LeagueTeamBasic'
