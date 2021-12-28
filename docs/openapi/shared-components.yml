@@ -1,0 +1,392 @@
+components:
+  schemas:
+    BasicLeagueMember:
+      description: The users that are part of the league.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayName:
+          type: string
+        isLeagueManager:
+          type: boolean
+
+    BasicLeagueResponse:
+      description: The basic information returned with all league responses.
+      type: object
+      properties:
+        gameId:
+          type: integer
+        id:
+          type: integer
+          description: The league id.
+        scoringPeriodId:
+          type: integer
+        seasonId:
+          type: integer
+          description: The year of the fantasy season.
+        segmentId:
+          type: integer
+
+    BasketballStats:
+      description: A collection of basketball statistics.
+      type: object
+      properties:
+        0:
+          description: Points (PTS).
+          type: number
+          format: float
+          minimum: 0.0
+        1:
+          description: Blocks (BLK).
+          type: number
+          format: float
+          minimum: 0.0
+        2: 
+          description: Steals (STL).
+          type: number
+          format: float
+          minimum: 0.0
+        3:
+          description: Assists (AST).
+          type: number
+          format: float
+          minimum: 0.0
+        4:
+          description:
+          type: number
+          format: float
+        5:
+          description:
+          type: number
+          format: float
+        6:
+          description: Rebounds (REB).
+          type: number
+          format: float
+          minimum: 0.0
+        7:
+          description:
+          type: number
+          format: float
+        8:
+          description:
+          type: number
+          format: float
+        9:
+          description:
+          type: number
+          format: float
+        10:
+          description:
+          type: number
+          format: float
+        11:
+          description: Turnovers (TO).
+          type: number
+          format: float
+          minimum: 0.0
+        12:
+          description:
+          type: number
+          format: float
+        13:
+          description: Field goals made (FGM).
+          type: number
+          format: float
+          minimum: 0.0
+        14:
+          description: Field goals attempted (FGA).
+          type: number
+          format: float
+          minimum: 0.0
+        15:
+          description: Free throws made (FTM).
+          type: number
+          format: float
+          minimum: 0.0
+        16:
+          description: Free throws attempted (FTA).
+          type: number
+          format: float
+          minimum: 0.0
+        17:
+          description:
+          type: number
+          format: float
+        18:
+          description:
+          type: number
+          format: float
+        19:
+          description:
+          type: number
+          format: float
+        20:
+          description:
+          type: number
+          format: float
+        21:
+          description:
+          type: number
+          format: float
+        22:
+          description:
+          type: number
+          format: float
+        23:
+          description:
+          type: number
+          format: float
+        24:
+          description:
+          type: number
+          format: float
+        25:
+          description:
+          type: number
+          format: float
+        26:
+          description:
+          type: number
+          format: float
+        27:
+          description:
+          type: number
+          format: float
+        28:
+          description:
+          type: number
+          format: float
+        29:
+          description:
+          type: number
+          format: float
+        30:
+          description:
+          type: number
+          format: float
+        31:
+          description:
+          type: number
+          format: float
+        32:
+          description:
+          type: number
+          format: float
+        33:
+          description:
+          type: number
+          format: float
+        34:
+          description:
+          type: number
+          format: float
+        35:
+          description:
+          type: number
+          format: float
+        36:
+          description:
+          type: number
+          format: float
+        37:
+          description:
+          type: number
+          format: float
+        38:
+          description:
+          type: number
+          format: float
+        39:
+          description:
+          type: number
+          format: float
+        40:
+          description:
+          type: number
+          format: float
+        41:
+          description:
+          type: number
+          format: float
+        42:
+          description:
+          type: number
+          format: float
+        43:
+          description:
+          type: number
+          format: float
+        44:
+          description:
+          type: number
+          format: float
+
+    DraftDetails:
+      type: object
+      properties:
+        drafted:
+          type: boolean
+        inProgress:
+          type: boolean
+
+    LeagueStatusBasic:
+      type: object
+      properties:
+        currentMatchupPeriod:
+          type: integer
+        isActive:
+          type: boolean
+        latestScoringPeriod:
+          type: integer
+
+    LeagueStatusDetailed:
+      description:
+        The league status returned when the view query parameter is mTeam.
+      allOf:
+        - $ref: '#/components/schemas/LeagueStatusBasic'
+        - type: object
+          properties:
+            activatedDate:
+              type: integer
+            createdAsLeagueType:
+              type: integer
+            currentLeagueType:
+              type: integer
+            currentMatchupPeriod:
+              type: integer
+            finalScoringPeriod:
+              type: integer
+            firstScoringPeriod:
+              type: integer
+            isActive:
+              type: boolean
+            isExpired:
+              type: boolean
+            isFull:
+              description: If the league has every team filled.
+              type: boolean
+            isPlayoffMatchupEdited:
+              type: boolean
+            isToBeDeleted:
+              type: boolean
+            isViewable:
+              description:
+                This might have to do with whether the league is private.
+              type: boolean
+            isWaiverOrderEdited:
+              type: boolean
+            latestScoringPeriod:
+              type: integer
+            previousSeasons:
+              description:
+                a list of the previous seasonYears the league was active.
+              type: array
+              items:
+                type: integer
+            standingsUpdateDate:
+              type: integer
+            teamsJoined:
+              description: The number of teams in the league.
+              type: integer
+            transactionScoringPeriod:
+              type: integer
+            waiverLastExecutionDate:
+              type: integer
+            waiverProcessStatus:
+              type: object
+              additionalProperties:
+                type: integer
+              example:
+                '2021-04-20T09:35:02.088+0000': 2
+
+    LeagueTeamBasic:
+      type: object
+      properties:
+        abbrev:
+          description: The abbreviation used to represent the team.
+          type: string
+          format: allcaps
+        id:
+          description:
+            A unique identifier specific to the team, league, and season.
+          type: integer
+          minimum: 1
+          example: 5
+        location:
+          description: Part of the team name.
+          type: string
+        nickname:
+          description: Part of the team name.
+          type: string
+        owners:
+          description: A list of users who own the team.
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    PlayerBasic: 
+      description: An object describing a professional player.
+      type: object
+      properties:
+        defaultPositionId:
+          type: integer
+        droppable:
+          description: Whether the player can be dropped.
+          type: boolean
+        eligibleSlots:
+          description: The position slots in the league that the player is elibile to be placed in.
+          type: array
+          items:
+            type: integer
+        firstName:
+          description: The first name of the player.
+          type: string
+        fullName:
+          description: The full name of the player.
+        id:
+          description: The unique identifier for the player.
+          type: integer
+        lastName:
+          description: The last name of the player.
+          type: string
+        ownership:
+          description: Aggregate information about the players ownership across ESPN leagues.
+          $ref: '#/components/schemas/PlayerOwnership'
+        proTeamId:
+          description: An identifier indicating which NBA team the player is on.
+          type: integer
+        seasonOutlook:
+          description: A text description written prior to the season that gives a summary of what to expect from the player during the season.
+          type: string
+        stats:
+          type: array
+
+    PlayerOwnership:
+      description: Aggregate information about a players ownership across ESPN leagues.
+      type: object
+      properties:
+        auctionValueAverage:
+          description: The average price paid for the player in a auction league drafts.
+          type: number
+          format: float
+        averageDraftPosition:
+          description: The average pick the player was drafted in traditional drafts.
+          type: number
+          format: float
+          minimum: 1.0
+        percentChange:
+          type: number
+          format: float
+        percentOwned:
+          description: The percent of leagues where the player is owned by a manager.
+          type: number
+          format: float
+          minimum: 0.0
+        percentStarted:
+          type: number
+          format: float
+      

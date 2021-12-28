@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: ESPN Fantasy API
+  description: TBD
+  version: 1.0.0
+servers:
+  - url: https://fantasy.espn.com/apis/v3/games/
+paths:
+  /{sportId}/seasons/{seasonYear}/segments/0/leagues/{leagueId}:
+    get:
+      summary: 'Get basic league details'
+      parameters:
+        - in: path
+          name: sportsId
+          description: The string based id of the fantasy sport.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: seasonYear
+          description: The year of the fantasy season (>2018).
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: leagueId
+          description: The id of the fantasy league.
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: view
+          description: The type of data that you are looking for.
+          required: false
+          schema:
+            $ref: '#/components/schemas/LeagueViews'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: './no-view-league.yml#/components/schemas/NoViewLeagueResponse'
+                  - $ref: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
+                discriminator:
+                  propertyName: view
+                  mapping:
+                    basic: './no-view-league.yml#/components/schemas/NoViewLeagueResponse'
+                    mTeam: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
+
+components:
+  schemas:
+    LeagueViews:
+      description:
+        The different slices of data available from the
+        /segments/0/leagues/{leagueId} endpoint.
+      type: string
+      enum:
+        - mMatchup
+        - mRoster
+        - mSettings
+        - mStandings
+        - mTeam

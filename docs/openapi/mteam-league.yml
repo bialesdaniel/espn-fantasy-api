@@ -1,0 +1,276 @@
+components:
+  schemas:
+    DraftStrategy:
+      type: object
+      properties:
+        keeperPlayerIds:
+          type: array
+          items:
+            type: integer
+
+    LogoType:
+      type: string
+      enum:
+        - CUSTOM
+        - CUSTOM_VALID
+
+    MTeamLeagueMember:
+      description: The users that are part of the league when view=mTeam.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/BasicLeagueMember'
+        - type: object
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            notificationSettings:
+              type: object
+              $ref: '#/components/schemas/NotificationSettings'
+
+    MTeamLeagueResponse:
+      description: The response returned when the view query parameter is mTeam.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/BasicLeagueResponse'
+        - type: object
+          properties:
+            draftDetails:
+              $ref: './shared-components.yml#/components/schemas/DraftDetails'
+            status:
+              $ref: './shared-components.yml#/components/schemas/LeagueStatusDetailed'
+            members:
+              type: array
+              items:
+                $ref: '#/components/schemas/MTeamLeagueMember'
+            teams:
+              type: array
+              items:
+                $ref: '#/components/schemas/MTeamLeagueTeam'
+
+    MTeamLeagueTeam:
+      description:
+        The league team that is returned when the view query parameter is mTeam.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/LeagueTeamBasic'
+        - type: object
+          properties:
+            currentProjectedRank:
+              type: integer
+            divisionId:
+              type: integer
+            draftDayProjectedRank:
+              type: integer
+            draftStrategy:
+              $ref: '#/components/schemas/DraftStrategy'
+            isActive:
+              type: boolean
+            logo:
+              type: string
+              format: url
+            logoType:
+              $ref: '#/components/schemas/LogoType'
+            playoffSeed:
+              description: Playoff seed based on current standings.
+              type: integer
+            points:
+              description: Total fantasy points scored this season.
+              type: number
+              format: float
+              minimum: 0.0
+            pointsAdjusted:
+              type: number
+              format: float
+            pointsDelta:
+              type: number
+              format: float
+            primaryOwner:
+              type: string
+              format: uuid
+            rankCalculatedFinal:
+              type: integer
+            rankFinal:
+              type: integer
+            record:
+              description: Information about the team's win-loss record.
+              $ref: '#/components/schemas/TeamRecordSplits'
+            tradeBlock:
+              description: Information about the player's trade block status.
+              $ref: '#/components/schemas/TradeBlock'
+            transactionCounter:
+              description: Information about the team's transations.
+              $ref: '#/components/schemas/TransactionCounter'
+            valuesByStat:
+              description:
+                The total basketball statistics accumulated by the team.
+              $ref: './shared-components.yml#/components/schemas/BasketballStats'
+            waiverRank:
+              description: Position in the waiver order.
+              type: integer
+              minimum: 1
+
+    NotificationSettings:
+      type: object
+      description:
+        The notification settings for a member of the fantasy league. This may
+        only relate to mobile notifications.
+      properties:
+        enabled:
+          type: boolean
+          description:
+            Whether the notification setting is enabled for the member.
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/NotificationType'
+
+    NotificationType:
+      description: The different types of notifications that ESPN sends.
+      type: string
+      enum:
+        - TEAM_TRADE_OFFER
+        - TEAM_PLAYER_NEWS
+        - TEAM_PLAYER_AVAILABILITY
+        - DRAFT
+
+    TeamRecord:
+      description: Information about a team's win-loss record.
+      type: object
+      properties:
+        gamesBack:
+          description:
+            The total number of games to be tied with the leader in the record
+            category.
+          type: number
+          format: float
+          minimum: 0.0
+        losses:
+          description:
+            The total number of losses the team has in the record category.
+          type: integer
+          minimum: 0
+        percentage:
+          description: The win percentage the team has in the record category.
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        pointsAgainst:
+          description:
+            The total number of points scored against the team in the record
+            category.
+          type: number
+          format: float
+        pointsFor:
+          description:
+            The total number of points scored for the team in the record
+            category.
+          type: number
+          format: float
+        streakLength:
+          description:
+            The length of the team's win or loss streak in the record category.
+          type: integer
+        streakType:
+          description:
+            Whether the team has a win or loss streak in the record category.
+          type: string
+          enum:
+            - LOSS
+            - WIN
+        ties:
+          description:
+            The total number of ties the team has in the record category.
+          type: integer
+        wins:
+          description:
+            The total number of wins the team has in the record category.
+          type: integer
+
+    TeamRecordSplits:
+      description: A collection of win-loss data splits for a team.
+      type: object
+      properties:
+        away:
+          $ref: '#/components/schemas/TeamRecord'
+        division:
+          $ref: '#/components/schemas/TeamRecord'
+        home:
+          $ref: '#/components/schemas/TeamRecord'
+        overall:
+          $ref: '#/components/schemas/TeamRecord'
+
+    TradeBlock:
+      description:
+        An object listing the different players and their status on the trading
+        block.
+      type: object
+      properties:
+        players:
+          description:
+            An object where the key is a string of the player's id and the value
+            is their trade block status.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TradeBlockStatus'
+          example:
+            '2345': 'ON_THE_BLOCK'
+
+    TradeBlockStatus:
+      description: The status associated with a player on the trade block.
+      type: string
+      enum:
+        - NORMAL
+        - ON_THE_BLOCK
+        - UNTOUCHABLE
+
+    TransactionCounter:
+      description: Information about the team's transactions.
+      type: object
+      properties:
+        acquisitionBudgetSpent:
+          type: integer
+        acquisitions:
+          description: The number of players added to the team.
+          type: integer
+          minimum: 0
+        drops:
+          description: The number of players dropped from the team.
+          type: integer
+          minimum: 0
+        matchupAcquisitionTotals:
+          description:
+            A map where the key is the week number and the value is the number
+            of acquisitions that week. Instances where there are no transactions
+            in a week there is no key-value pair for the week.
+          type: object
+          additionalProperties:
+            type: integer
+          example:
+            '1': 3
+            '2': 1
+        misc:
+          type: integer
+          minimum: 0
+        moveToActive:
+          description:
+            The number of times a team has moved a player into an active roster
+            sport.
+          type: integer
+          minimum: 0
+        moveToIR:
+          description:
+            The number of times a team has moved a player to an injured reserve
+            position.
+          type: integer
+          minimum: 0
+        paid:
+          type: number
+          format: float
+        teamCharges:
+          type: number
+          format: float
+        trades:
+          description: The number of trades a team has completed.
+          type: integer
+          minimum: 0

@@ -1,0 +1,25 @@
+components:
+  schemas:
+    NoViewLeagueResponse:
+      description:
+        The response returned when no view query parameter is supplied.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/BasicLeagueResponse'
+        - type: object
+          properties:
+            members:
+              type: array
+              items:
+                $ref: './shared-components.yml#/components/schemas/BasicLeagueMember'
+            settings:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the fantasy league.
+            status:
+              $ref: './shared-components.yml#/components/schemas/LeagueStatusBasic'
+            teams:
+              type: array
+              items:
+                $ref: './shared-components.yml#/components/schemas/BasicLeagueTeam'

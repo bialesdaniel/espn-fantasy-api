@@ -1,0 +1,48 @@
+components:
+  schemas:
+    MRosterLeagueResponse:
+      description:
+        The response returned when the view query parameter is mRoster.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/BasicLeagueResponse'
+        - type: object
+          properties:
+            draftDetails:
+              $ref: './shared-components.yml#/components/schemas/DraftDetails'
+            status:
+              $ref: './shared-components.yml#/components/schemas/LeagueStatusDetailed'
+            teams:
+              type: array
+              items:
+                $ref: '#/components/schemas/MRosterLeagueTeam'
+
+    MRosterLeagueTeam:
+      description:
+        The league team that is returned when the view query parameter is
+        mRoster.
+      type: object
+      properties:
+        id:
+          description:
+            A unique identifier specific to the team, league, and season.
+          type: integer
+          minimum: 1
+          example: 5
+        roster:
+
+    TeamRoster:
+      description: The roster of a team in the league.
+      type: object
+      properties:
+        appliedStatTotal:
+          type: number
+          format: float
+        entries:
+          description: A list of the players on the team.
+          type: array
+          items:
+            $ref: './shared-components.yml#/components/schemas/Player'
+        tradeReservedEntries:
+          type: number
+          format: float
+
