@@ -11,7 +11,7 @@ paths:
       summary: 'Get basic league details'
       parameters:
         - in: path
-          name: sportsId
+          name: sportId
           description: The string based id of the fantasy sport.
           required: true
           schema:
