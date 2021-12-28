@@ -150,7 +150,9 @@ components:
               description: The player ratings for the past 30 days.
               $ref: './shared-components.yml#/components/schemas/PlayerRatings'
         rosterLocked:
-          description: Whether the player has been locked into their roster spot for the day.
+          description:
+            Whether the player has been locked into their roster spot for the
+            day.
           type: boolean
         status:
           $ref: './shared-components.yml#/components/schemas/PlayerPoolEntryStatus'

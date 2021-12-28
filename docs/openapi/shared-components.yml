@@ -449,5 +449,3 @@ components:
           type: number
           format: float
           example: 119.0
-
-

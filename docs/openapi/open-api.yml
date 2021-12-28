@@ -9,6 +9,11 @@ paths:
   /{sportId}/seasons/{seasonYear}/segments/0/leagues/{leagueId}:
     get:
       summary: 'Get basic league details'
+      description:
+        This GET request can return many different response bodies depending on
+        the view query parameters. Look at the schema of the response to see the
+        different types of response bodies available. The descriptions of the
+        response bodies explain which query parameters they correspond to.
       parameters:
         - in: path
           name: sportId
