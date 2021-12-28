@@ -30,6 +30,7 @@ components:
           example: 5
         roster:
           description: The details of the team's roster.
+          $ref: '#/components/schemas/Roster'
 
     Roster:
       description: The roster of a team in the league.
