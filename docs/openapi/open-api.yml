@@ -78,6 +78,53 @@ paths:
                     mTeam: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
                     mRoster: './mroster-league.yml#/components/schemas/MRosterLeagueResponse'
 
+  /{sportId}/seasons/{seasonYear}/segments/0/leagues/{leagueId}/transactions:
+    post:
+      summary: 'Submit lineup changes'
+      description:
+        POST request to submit lineup changes
+      parameters:
+        - name: sportId
+          in: path
+          description: >
+            The string based id of the fantasy sport.
+            * nfl - ffl
+            * nba - fba
+            * nfl - fhl
+            * mlb - mlb
+          required: true
+          schema:
+            type: string
+            enum:
+              - ffl
+              - fba
+              - fhl
+              - flb
+        - name: seasonYear
+          in: path
+          description: The year of the fantasy season (>2018).
+          required: true
+          schema:
+            type: integer
+        - name: leagueId
+          in: path
+          description: The id of the fantasy league.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionPayload'
+      responses:
+        '200':
+          description: Ok
+        '202':
+          description: Accepted
+
 components:
   schemas:
     LeagueViews:
@@ -94,3 +141,65 @@ components:
         - players_wl
         - proTeamSchedules_wl
         - mDraftDetail
+    
+    TransactionPayload:
+      description: Payload for POST request body to change a lineup
+      type: "object"
+      required:
+        - isLeagueManager
+        - teamId
+        - type
+        - memberId
+        - scoringPeriodId
+        - executionType
+        - items
+      properties:
+        isLeagueManager: 
+          description: not sure if this can be boolean and not sure what happens if its true
+          type: string
+          enum:
+            - "false"
+            - "true" 
+        teamId:
+          description: the team id for the roster to be updated
+          type: integer
+        type: 
+          description: TBD, maybe LM as true can make retroactive changes, make add/drops
+          enum:
+            - "FUTURE_ROSTER" 
+        memberId: 
+          description: SWID
+          type: string
+        scoringPeriodId: 
+          description: the scoring period (day) for the lineup change
+          type: integer
+        executionType: 
+          description: not sure
+          type: string
+          enum: 
+            - "EXECUTE"
+        items: 
+          description: list of lineup instructions
+          type: array
+          items:
+            $ref: '#/components/schemas/Instruction'
+
+    Instruction:
+      description: Payload for POST request body to change a lineup
+      type: "object"
+      required:
+        - playerId
+        - type
+        - toLineupSlotId
+      properties:
+        playerId:
+          description: The unique identifier for the player.
+          type: integer
+        type:
+          description: The type of Instruction, only know LINEUP for now
+          type: string
+          enum:
+            - "LINEUP"
+        toLineupSlotId:
+          description: The ID of the lineup slot (todo add id to pos map)
+          type: integer
