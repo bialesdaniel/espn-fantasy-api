@@ -17,10 +17,20 @@ paths:
       parameters:
         - in: path
           name: sportId
-          description: The string based id of the fantasy sport.
+          description: >
+            The string based id of the fantasy sport.
+            * nfl - ffl
+            * nba - fba
+            * nfl - fhl
+            * mlb - mlb
           required: true
           schema:
             type: string
+            enum:
+              - ffl
+              - fba
+              - fhl
+              - flb
         - in: path
           name: seasonYear
           description: The year of the fantasy season (>2018).
@@ -39,6 +49,18 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/LeagueViews'
+        - in: query
+          name: forTeamId
+          description: Get data for a specific fantasy team by their id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: scoringPeriodId
+          description: Get data for a specific fantasy scoring period (day)
+          required: false
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -69,3 +91,6 @@ components:
         - mSettings
         - mStandings
         - mTeam
+        - players_wl
+        - proTeamSchedules_wl
+        - mDraftDetail
