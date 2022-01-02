@@ -17,20 +17,10 @@ paths:
       parameters:
         - in: path
           name: sportId
-          description: >
-            The string based id of the fantasy sport.
-            * nfl - ffl
-            * nba - fba
-            * nfl - fhl
-            * mlb - mlb
+          description: The string based id of the fantasy sport.
           required: true
           schema:
-            type: string
-            enum:
-              - ffl
-              - fba
-              - fhl
-              - flb
+            $ref: '#/components/schemas/SportIds'
         - in: path
           name: seasonYear
           description: The year of the fantasy season (>2018).
@@ -84,22 +74,12 @@ paths:
       description:
         POST request to submit lineup changes
       parameters:
-        - name: sportId
-          in: path
-          description: >
-            The string based id of the fantasy sport.
-            * nfl - ffl
-            * nba - fba
-            * nfl - fhl
-            * mlb - mlb
+        - in: path
+          name: sportId
+          description: The string based id of the fantasy sport.
           required: true
           schema:
-            type: string
-            enum:
-              - ffl
-              - fba
-              - fhl
-              - flb
+            $ref: '#/components/schemas/SportIds'
         - name: seasonYear
           in: path
           description: The year of the fantasy season (>2018).
@@ -122,8 +102,8 @@ paths:
       responses:
         '200':
           description: Ok
-        '202':
-          description: Accepted
+        '409':
+          description: Illegal lineup
 
 components:
   schemas:
@@ -142,6 +122,20 @@ components:
         - proTeamSchedules_wl
         - mDraftDetail
     
+    SportIds:
+      description: >
+          The string based id of the fantasy sport.
+          * nfl - ffl
+          * nba - fba
+          * nfl - fhl
+          * mlb - mlb
+      type: string
+      enum:
+              - ffl
+              - fba
+              - fhl
+              - flb
+    
     TransactionPayload:
       description: Payload for POST request body to change a lineup
       type: "object"
@@ -155,11 +149,8 @@ components:
         - items
       properties:
         isLeagueManager: 
-          description: not sure if this can be boolean and not sure what happens if its true
-          type: string
-          enum:
-            - "false"
-            - "true" 
+          description: is submitted user the league manager
+          type: boolean
         teamId:
           description: the team id for the roster to be updated
           type: integer
@@ -171,7 +162,9 @@ components:
           description: SWID
           type: string
         scoringPeriodId: 
-          description: the scoring period (day) for the lineup change
+          description: 
+              The scoring period for the lineup change. First day of a fantasy season is 1. 
+              For example 2022 NBA first day of the season was Oct 19th and ScoringPeriodId = 1
           type: integer
         executionType: 
           description: not sure
