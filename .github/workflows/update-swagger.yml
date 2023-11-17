@@ -30,7 +30,7 @@ jobs:
           tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
           rm $RELEASE_TAG
           # Move index.html to the root
-          mv ui/index.html .
+          mv dist/index.html .
           # Rename dist directory
           mv dist ui
           # Fix references in ui/swagger-initializer and index.html
