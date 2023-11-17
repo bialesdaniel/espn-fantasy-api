@@ -167,8 +167,48 @@ components:
         - $ref: './shared-components.yml#/components/schemas/PlayerBasic'
         - type: object
           properties:
+            active:
+              description: Unknown
+              type: boolean
+            draftRanksByDraftType:
+              description:  Aggregate information about how the player ranks in the draft of different league formats.
+              type: object
+              properties:
+                STANDARD:
+                  description: Unknown
+                  $ref: "#/components/schemas/DraftRank"
             seasonOutlook:
               description:
                 A text description written prior to the season that gives a
                 summary of what to expect from the player during the season.
               type: string
+
+    DraftRank:
+      description: Information about how a player was ranked in different draft formats.
+      type: object
+      properties:
+        auctionValue: 
+          description: Unknown
+          type: integer
+        published:
+          description: Unknown
+          type: boolean
+        rank:
+          description: Unknown
+          type: integer
+        rankSourceId:
+          description: Unknown
+          type: integer
+        rankType:
+          description: Unknown
+          $ref: "#/components/schemas/DraftRankType"
+        slotId:
+          description: Unknown
+          type: integer
+
+    DraftRankType:
+      description: Unknown
+      type: string
+      enum:
+        - STANDARD
+        
