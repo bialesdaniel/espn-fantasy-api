@@ -21,8 +21,8 @@ jobs:
         env:
           RELEASE_TAG: ${{ steps.swagger-ui.outputs.release_tag }}
           SWAGGER_YAML: "openapi/open-api.yml"
-          UI_DIR: docs/ui
         run: |
+          cd docs/
           # Delete the dist directory and index.html
           rm -fr $UI_DIR docs/index.html
           # Download the release
@@ -31,14 +31,14 @@ jobs:
           tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
           rm $RELEASE_TAG
           # Move index.html to the root
-          mv dist/index.html docs/
+          mv dist/index.html .
           # Rename dist directory
-          mv dist $UI_DIR
+          mv dist ui
           # Fix references in ui/swagger-initializer and index.html
           sed -i "s|https://petstore.swagger.io/v2/swagger.json|$SWAGGER_YAML|g" ui/swagger-initializer.js
-          sed -i "s|href=\"./|href=\"$UI_DIR/|g" index.html
-          sed -i "s|src=\"./|src=\"$UI_DIR/|g" index.html
-          sed -i "s|href=\"index|href=\"$UI_DIR/index|g" index.html
+          sed -i "s|href=\"./|href=\"ui/|g" index.html
+          sed -i "s|src=\"./|src=\"ui/|g" index.html
+          sed -i "s|href=\"index|href=\"ui/index|g" index.html
           # Update current release
           echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
       - name: Create Pull Request
