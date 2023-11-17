@@ -10,19 +10,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Get Latest Swagger UI Release
+        working-directory: docs
         id: swagger-ui
         run: |
+          cd docs/
           release_tag=$(curl -sL https://api.github.com/repos/swagger-api/swagger-ui/releases/latest | jq -r ".tag_name")
           echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
           current_tag=$(<swagger-ui.version)
           echo "current_tag=$current_tag" >> $GITHUB_OUTPUT
       - name: Update Swagger UI
+        working-directory: docs
         if: steps.swagger-ui.outputs.current_tag != steps.swagger-ui.outputs.release_tag
         env:
           RELEASE_TAG: ${{ steps.swagger-ui.outputs.release_tag }}
           SWAGGER_YAML: "openapi/open-api.yml"
         run: |
-          cd docs/
           # Delete the dist directory and index.html
           rm -fr ui index.html
           # Download the release
