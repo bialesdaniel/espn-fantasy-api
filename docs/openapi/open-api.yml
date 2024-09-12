@@ -20,7 +20,7 @@ paths:
           description: The string based id of the fantasy sport.
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/SportIds'
         - in: path
           name: seasonYear
           description: The year of the fantasy season (>2018).
@@ -39,6 +39,18 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/LeagueViews'
+        - in: query
+          name: forTeamId
+          description: Get data for a specific fantasy team by their id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: scoringPeriodId
+          description: Get data for a specific fantasy scoring period (day)
+          required: false
+          schema:
+            type: integer
       responses:
         200:
           description: OK
@@ -56,6 +68,43 @@ paths:
                     mTeam: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
                     mRoster: './mroster-league.yml#/components/schemas/MRosterLeagueResponse'
 
+  /{sportId}/seasons/{seasonYear}/segments/0/leagues/{leagueId}/transactions:
+    post:
+      summary: 'Submit lineup changes'
+      description:
+        POST request to submit lineup changes
+      parameters:
+        - in: path
+          name: sportId
+          description: The string based id of the fantasy sport.
+          required: true
+          schema:
+            $ref: '#/components/schemas/SportIds'
+        - name: seasonYear
+          in: path
+          description: The year of the fantasy season (>2018).
+          required: true
+          schema:
+            type: integer
+        - name: leagueId
+          in: path
+          description: The id of the fantasy league.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionPayload'
+      responses:
+        '200':
+          description: Ok
+        '409':
+          description: Illegal lineup
+
 components:
   schemas:
     LeagueViews:
@@ -69,3 +118,81 @@ components:
         - mSettings
         - mStandings
         - mTeam
+        - players_wl
+        - proTeamSchedules_wl
+        - mDraftDetail
+    
+    SportIds:
+      description: >
+          The string based id of the fantasy sport.
+          * nfl - ffl
+          * nba - fba
+          * nfl - fhl
+          * mlb - mlb
+      type: string
+      enum:
+              - ffl
+              - fba
+              - fhl
+              - flb
+    
+    TransactionPayload:
+      description: Payload for POST request body to change a lineup
+      type: "object"
+      required:
+        - isLeagueManager
+        - teamId
+        - type
+        - memberId
+        - scoringPeriodId
+        - executionType
+        - items
+      properties:
+        isLeagueManager: 
+          description: is submitted user the league manager
+          type: boolean
+        teamId:
+          description: the team id for the roster to be updated
+          type: integer
+        type: 
+          description: TBD, maybe LM as true can make retroactive changes, make add/drops
+          enum:
+            - "FUTURE_ROSTER" 
+        memberId: 
+          description: SWID
+          type: string
+        scoringPeriodId: 
+          description: 
+              The scoring period for the lineup change. First day of a fantasy season is 1. 
+              For example 2022 NBA first day of the season was Oct 19th and ScoringPeriodId = 1
+          type: integer
+        executionType: 
+          description: not sure
+          type: string
+          enum: 
+            - "EXECUTE"
+        items: 
+          description: list of lineup instructions
+          type: array
+          items:
+            $ref: '#/components/schemas/Instruction'
+
+    Instruction:
+      description: Payload for POST request body to change a lineup
+      type: "object"
+      required:
+        - playerId
+        - type
+        - toLineupSlotId
+      properties:
+        playerId:
+          description: The unique identifier for the player.
+          type: integer
+        type:
+          description: The type of Instruction, only know LINEUP for now
+          type: string
+          enum:
+            - "LINEUP"
+        toLineupSlotId:
+          description: The ID of the lineup slot (todo add id to pos map)
+          type: integer
