@@ -157,7 +157,8 @@ components:
           minimum: 0.0
           maximum: 1.0
         22:
-          description: Effective Field Goal Percentage (eFG% = (FGM + 0.5 * 3PM) / FGA).
+          description:
+            Effective Field Goal Percentage (eFG% = (FGM + 0.5 * 3PM) / FGA).
           type: number
           format: float
           minimum: 0.0
@@ -283,7 +284,8 @@ components:
     InjuryStatus:
       description:
         The injury/reservation status of a roster slot, indicating whether a
-        player is in a normal slot or pending movement to/from an Injured Reserve (IR) slot.
+        player is in a normal slot or pending movement to/from an Injured
+        Reserve (IR) slot.
       type: string
       enum:
         - NORMAL
@@ -302,7 +304,8 @@ components:
         - SUSPENSION
 
     BasketballPositionId:
-      description: The primary basketball position identifier (defaultPositionId).
+      description:
+        The primary basketball position identifier (defaultPositionId).
       type: integer
       enum:
         - 1 # Point Guard (PG)
@@ -312,7 +315,8 @@ components:
         - 5 # Center (C)
 
     BasketballLineupSlotId:
-      description: The lineup slot identifier used for roster positions and eligibility.
+      description:
+        The lineup slot identifier used for roster positions and eligibility.
       type: integer
       enum:
         - 0 # Point Guard (PG)
@@ -432,14 +436,16 @@ components:
       properties:
         defaultPositionId:
           description:
-            The primary position ID of the player (1: PG, 2: SG, 3: SF, 4: PF, 5: C).
+            'The primary position ID of the player (1: PG, 2: SG, 3: SF, 4: PF,
+            5: C).'
           $ref: '#/components/schemas/BasketballPositionId'
         droppable:
           description: Whether the player can be dropped by a fantasy manager.
           type: boolean
         eligibleSlots:
           description:
-            The lineup slot IDs that the player is eligible to fill in the league roster.
+            The lineup slot IDs that the player is eligible to fill in the
+            league roster.
           type: array
           items:
             $ref: '#/components/schemas/BasketballLineupSlotId'
@@ -465,7 +471,9 @@ components:
           type: string
           example: Achiuwa
         lastNewsDate:
-          description: Timestamp in milliseconds when news was last published for the player.
+          description:
+            Timestamp in milliseconds when news was last published for the
+            player.
           type: integer
         ownership:
           description:
@@ -474,7 +482,8 @@ components:
           $ref: '#/components/schemas/PlayerOwnership'
         proTeamId:
           description:
-            An identifier indicating which NBA team the player is on (0: Free Agent, 1-30: NBA teams).
+            'An identifier indicating which NBA team the player is on (0: Free
+            Agent, 1-30: NBA teams).'
           type: integer
           minimum: 0
           example: 28
