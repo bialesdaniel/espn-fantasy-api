@@ -4,19 +4,34 @@ on:
     - cron:  '0 10 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   updateSwagger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get Latest Swagger UI Release
         working-directory: docs
         id: swagger-ui
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          release_tag=$(curl -sL https://api.github.com/repos/swagger-api/swagger-ui/releases/latest | jq -r ".tag_name")
-          echo "release_tag=$release_tag" >> $GITHUB_OUTPUT
+          release_tag=$(curl -sSfL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/swagger-api/swagger-ui/releases/latest | jq -r ".tag_name")
+
+          if [ -z "$release_tag" ] || [ "$release_tag" = "null" ]; then
+            echo "::error::Failed to fetch latest Swagger UI release tag"
+            exit 1
+          fi
+
+          echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
           current_tag=$(<swagger-ui.version)
-          echo "current_tag=$current_tag" >> $GITHUB_OUTPUT
+          echo "current_tag=$current_tag" >> "$GITHUB_OUTPUT"
       - name: Update Swagger UI
         working-directory: docs
         if: steps.swagger-ui.outputs.current_tag != steps.swagger-ui.outputs.release_tag
@@ -27,10 +42,10 @@ jobs:
           # Delete the dist directory and index.html
           rm -fr ui index.html
           # Download the release
-          curl -sL -o $RELEASE_TAG https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG
+          curl -sSLf -o "$RELEASE_TAG.tar.gz" "https://api.github.com/repos/swagger-api/swagger-ui/tarball/$RELEASE_TAG"
           # Extract the dist directory
-          tar -xzf $RELEASE_TAG --strip-components=1 $(tar -tzf $RELEASE_TAG | head -1 | cut -f1 -d"/")/dist
-          rm $RELEASE_TAG
+          tar -xzf "$RELEASE_TAG.tar.gz" --strip-components=1 $(tar -tzf "$RELEASE_TAG.tar.gz" | head -1 | cut -f1 -d"/")/dist
+          rm "$RELEASE_TAG.tar.gz"
           # Move index.html to the root
           mv dist/index.html .
           # Rename dist directory
@@ -41,9 +56,10 @@ jobs:
           sed -i "s|src=\"./|src=\"ui/|g" index.html
           sed -i "s|href=\"index|href=\"ui/index|g" index.html
           # Update current release
-          echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
+          echo "$RELEASE_TAG" > swagger-ui.version
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        if: steps.swagger-ui.outputs.current_tag != steps.swagger-ui.outputs.release_tag
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: Update swagger-ui to ${{ steps.swagger-ui.outputs.release_tag }}
           title: Update SwaggerUI to ${{ steps.swagger-ui.outputs.release_tag }}
@@ -56,3 +72,4 @@ jobs:
             [2]: https://github.com/peter-evans/create-pull-request
           labels: dependencies, automated pr
           branch: swagger-ui-updates
+          delete-branch: true
