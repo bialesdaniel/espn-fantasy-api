@@ -1,0 +1,12 @@
+# Sensitive local credentials and API samples
+docs/sample-api-values.txt
+sample-api-values.txt
+*.local
+*.env
+sample-*.json
+*.json.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+

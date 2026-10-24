@@ -40,7 +40,7 @@ components:
           type: integer
 
     BasketballStats:
-      description: A collection of basketball statistics.
+      description: A collection of basketball statistics keyed by ESPN stat ID.
       type: object
       properties:
         0:
@@ -64,175 +64,213 @@ components:
           format: float
           minimum: 0.0
         4:
-          description:
+          description: Offensive Rebounds (OREB).
           type: number
           format: float
+          minimum: 0.0
         5:
-          description:
+          description: Defensive Rebounds (DREB).
           type: number
           format: float
+          minimum: 0.0
         6:
-          description: Rebounds (REB).
+          description: Rebounds (REB) - Total rebounds (OREB + DREB).
           type: number
           format: float
           minimum: 0.0
         7:
-          description:
+          description: Disqualifications / Fouled Out (DQ).
           type: number
           format: float
+          minimum: 0.0
         8:
-          description:
+          description: Flagrant Fouls (FF).
           type: number
           format: float
+          minimum: 0.0
         9:
-          description:
+          description: Personal Fouls (PF).
           type: number
           format: float
+          minimum: 0.0
         10:
-          description:
+          description: Technical Fouls (TF).
           type: number
           format: float
+          minimum: 0.0
         11:
           description: Turnovers (TO).
           type: number
           format: float
           minimum: 0.0
         12:
-          description:
+          description: Ejections (EJ).
           type: number
           format: float
+          minimum: 0.0
         13:
-          description: Field goals made (FGM).
+          description: Field Goals Made (FGM).
           type: number
           format: float
           minimum: 0.0
         14:
-          description: Field goals attempted (FGA).
+          description: Field Goals Attempted (FGA).
           type: number
           format: float
           minimum: 0.0
         15:
-          description: Free throws made (FTM).
+          description: Free Throws Made (FTM).
           type: number
           format: float
           minimum: 0.0
         16:
-          description: Free throws attempted (FTA).
+          description: Free Throws Attempted (FTA).
           type: number
           format: float
           minimum: 0.0
         17:
-          description:
+          description: 3-Point Field Goals Made (3PM).
           type: number
           format: float
+          minimum: 0.0
         18:
-          description:
+          description: 3-Point Field Goals Attempted (3PA).
           type: number
           format: float
+          minimum: 0.0
         19:
-          description:
+          description: Field Goal Percentage (FG% = FGM / FGA).
           type: number
           format: float
+          minimum: 0.0
+          maximum: 1.0
         20:
-          description:
+          description: Free Throw Percentage (FT% = FTM / FTA).
           type: number
           format: float
+          minimum: 0.0
+          maximum: 1.0
         21:
-          description:
+          description: 3-Point Field Goal Percentage (3P% = 3PM / 3PA).
           type: number
           format: float
+          minimum: 0.0
+          maximum: 1.0
         22:
-          description:
+          description: Effective Field Goal Percentage (eFG% = (FGM + 0.5 * 3PM) / FGA).
           type: number
           format: float
+          minimum: 0.0
         23:
-          description:
+          description: Field Goals Missed (FGMI = FGA - FGM).
           type: number
           format: float
+          minimum: 0.0
         24:
-          description:
+          description: Free Throws Missed (FTMI = FTA - FTM).
           type: number
           format: float
+          minimum: 0.0
         25:
-          description:
+          description: 3-Point Field Goals Missed (3PMI = 3PA - 3PM).
           type: number
           format: float
+          minimum: 0.0
         26:
-          description:
+          description: Assists Per Game (APG).
           type: number
           format: float
+          minimum: 0.0
         27:
-          description:
+          description: Blocks Per Game (BPG).
           type: number
           format: float
+          minimum: 0.0
         28:
-          description:
+          description: Minutes Per Game (MPG).
           type: number
           format: float
+          minimum: 0.0
         29:
-          description:
+          description: Points Per Game (PPG).
           type: number
           format: float
+          minimum: 0.0
         30:
-          description:
+          description: Rebounds Per Game (RPG).
           type: number
           format: float
+          minimum: 0.0
         31:
-          description:
+          description: Steals Per Game (SPG).
           type: number
           format: float
+          minimum: 0.0
         32:
-          description:
+          description: Turnovers Per Game (TOPG).
           type: number
           format: float
+          minimum: 0.0
         33:
-          description:
+          description: 3-Point Field Goals Made Per Game (3PMG).
           type: number
           format: float
+          minimum: 0.0
         34:
-          description:
+          description: Points Per Minute (PPM = PTS / MIN).
           type: number
           format: float
+          minimum: 0.0
         35:
-          description:
+          description: Assist-to-Turnover Ratio (AST / TO).
           type: number
           format: float
+          minimum: 0.0
         36:
-          description:
+          description: Steal-to-Turnover Ratio (STL / TO).
           type: number
           format: float
+          minimum: 0.0
         37:
-          description:
+          description: Double-Doubles (DD).
           type: number
           format: float
+          minimum: 0.0
         38:
-          description:
+          description: Triple-Doubles (TD).
           type: number
           format: float
+          minimum: 0.0
         39:
-          description:
+          description: Quadruple-Doubles (QD).
           type: number
           format: float
+          minimum: 0.0
         40:
-          description:
+          description: Minutes Played (MIN).
           type: number
           format: float
+          minimum: 0.0
         41:
-          description:
+          description: Games Played (GP).
           type: number
           format: float
+          minimum: 0.0
         42:
-          description:
+          description: Games Started (GS).
           type: number
           format: float
+          minimum: 0.0
         43:
-          description:
+          description: Team Wins (W) in games played.
           type: number
           format: float
+          minimum: 0.0
         44:
-          description:
+          description: Free Throw Attempt Rate (FTr = FTA / FGA).
           type: number
           format: float
+          minimum: 0.0
 
     DraftDetails:
       type: object
@@ -243,10 +281,54 @@ components:
           type: boolean
 
     InjuryStatus:
+      description:
+        The injury/reservation status of a roster slot, indicating whether a
+        player is in a normal slot or pending movement to/from an Injured Reserve (IR) slot.
       type: string
       enum:
         - NORMAL
+        - FUTURE_TO_IR
         - FUTURE_FROM_IR
+
+    PlayerInjuryStatus:
+      description: The physical injury status of an individual player.
+      type: string
+      enum:
+        - ACTIVE
+        - DAY_TO_DAY
+        - OUT
+        - QUESTIONABLE
+        - DOUBTFUL
+        - SUSPENSION
+
+    BasketballPositionId:
+      description: The primary basketball position identifier (defaultPositionId).
+      type: integer
+      enum:
+        - 1 # Point Guard (PG)
+        - 2 # Shooting Guard (SG)
+        - 3 # Small Forward (SF)
+        - 4 # Power Forward (PF)
+        - 5 # Center (C)
+
+    BasketballLineupSlotId:
+      description: The lineup slot identifier used for roster positions and eligibility.
+      type: integer
+      enum:
+        - 0 # Point Guard (PG)
+        - 1 # Shooting Guard (SG)
+        - 2 # Small Forward (SF)
+        - 3 # Power Forward (PF)
+        - 4 # Center (C)
+        - 5 # Guard (G: PG/SG)
+        - 6 # Forward (F: SF/PF)
+        - 7 # Guard / Forward (SG/SF)
+        - 8 # Guard / Forward (G/F)
+        - 9 # Forward / Center (PF/C)
+        - 10 # Forward / Center (F/C)
+        - 11 # Utility (UTIL)
+        - 12 # Bench (BE)
+        - 13 # Injured Reserve (IR)
 
     LeagueStatusBasic:
       type: object
@@ -349,17 +431,18 @@ components:
       type: object
       properties:
         defaultPositionId:
-          type: integer
+          description:
+            The primary position ID of the player (1: PG, 2: SG, 3: SF, 4: PF, 5: C).
+          $ref: '#/components/schemas/BasketballPositionId'
         droppable:
-          description: Whether the player can be dropped.
+          description: Whether the player can be dropped by a fantasy manager.
           type: boolean
         eligibleSlots:
           description:
-            The position slots in the league that the player is elibile to be
-            placed in.
+            The lineup slot IDs that the player is eligible to fill in the league roster.
           type: array
           items:
-            type: integer
+            $ref: '#/components/schemas/BasketballLineupSlotId'
         firstName:
           description: The first name of the player.
           type: string
@@ -369,25 +452,34 @@ components:
           type: string
           example: Precious Achiuwa
         id:
-          description: The unique identifier for the player.
+          description: The unique identifier for the professional player.
           type: integer
-          format: uuid
           example: 4431679
+        injured:
+          description: Whether the player is currently injured.
+          type: boolean
+        injuryStatus:
+          $ref: '#/components/schemas/PlayerInjuryStatus'
         lastName:
           description: The last name of the player.
           type: string
           example: Achiuwa
+        lastNewsDate:
+          description: Timestamp in milliseconds when news was last published for the player.
+          type: integer
         ownership:
           description:
             Aggregate information about the players ownership across ESPN
             leagues.
           $ref: '#/components/schemas/PlayerOwnership'
         proTeamId:
-          description: An identifier indicating which NBA team the player is on.
+          description:
+            An identifier indicating which NBA team the player is on (0: Free Agent, 1-30: NBA teams).
           type: integer
           minimum: 0
           example: 28
         universeId:
+          description: Identifier for the sport universe (e.g. 2 for NBA).
           type: integer
 
     PlayerOwnership:
@@ -397,7 +489,7 @@ components:
       properties:
         auctionValueAverage:
           description:
-            The average price paid for the player in a auction league drafts.
+            The average price paid for the player in auction league drafts.
           type: number
           format: float
         averageDraftPosition:
@@ -420,8 +512,12 @@ components:
           format: float
 
     PlayerPoolEntryStatus:
+      description: The status of a player within the fantasy league pool.
+      type: string
       enum:
         - ONTEAM
+        - WAIVERS
+        - FREEAGENT
 
     PlayerRatings:
       description:

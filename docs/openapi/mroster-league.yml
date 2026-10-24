@@ -51,8 +51,8 @@ components:
 
     RosterEntry:
       description:
-        An description of the filled roster position. This includes when the
-        roster spot was filled and they player that was acquired.
+        A description of the filled roster position. This includes when the
+        roster spot was filled and the player that was acquired.
       type: object
       properties:
         acquisitionDate:
@@ -63,39 +63,38 @@ components:
           format: integer
           example: 1634001405127
         acquisitionType:
-          description: How the player was aquired to fill the roster spot.
+          description: How the player was acquired to fill the roster spot.
           $ref: './shared-components.yml#/components/schemas/AcquisitionType'
         injuryStatus:
           $ref: './shared-components.yml#/components/schemas/InjuryStatus'
         lineupSlotId:
           description:
-            The position in the fantasy team that the player currently occupies.
-          type: number
-          format: integer
-          minimum: 1
-          example: 5
-        pendingTransationIds:
+            The lineup slot ID in the fantasy team that the player currently occupies.
+          $ref: './shared-components.yml#/components/schemas/BasketballLineupSlotId'
+        pendingTransactionIds:
           description:
+            A list of transaction UUIDs currently pending that involve this player.
           type: array
           items:
-            description: The uuid of the transaction associated with the player.
+            description: The UUID of the transaction associated with the player.
             type: string
             format: uuid
             example: efa9b89b-f7e5-4b41-ab11-6560b3baaf7c
           nullable: true
         playerId:
-          description: The id of the playrer that occupies the roster spot.
-          type: number
-          format: integer
+          description: The id of the player that occupies the roster spot.
+          type: integer
           example: 3059318
         playerPoolEntry:
           description:
             Details related to the player that occupies a roster spot.
           $ref: '#/components/schemas/RosterPlayerPoolEntry'
         status:
+          description: The transaction or lineup status of the roster entry.
           type: string
           enum:
             - NORMAL
+            - FUTURE_DROP
 
     RosterPlayerPoolEntry:
       description: Information related to a player's role on a fantasy team.
@@ -169,47 +168,109 @@ components:
         - type: object
           properties:
             active:
-              description: Unknown
+              description: Whether the player is currently on an active NBA roster.
               type: boolean
-            draftRanksByDraftType:
-              description:  Aggregate information about how the player ranks in the draft of different league formats.
+            draftRanksByRankType:
+              description:
+                Aggregate information about how the player ranks in the draft across different scoring formats.
               type: object
               properties:
                 STANDARD:
-                  description: Unknown
+                  description: Draft ranking for standard head-to-head points or categories.
+                  $ref: "#/components/schemas/DraftRank"
+                ROTO:
+                  description: Draft ranking for rotisserie scoring formats.
                   $ref: "#/components/schemas/DraftRank"
             seasonOutlook:
               description:
                 A text description written prior to the season that gives a
                 summary of what to expect from the player during the season.
               type: string
+            stats:
+              description:
+                A collection of player stat splits (e.g. season totals, recent 7/15/30 days, projections).
+              type: array
+              items:
+                $ref: '#/components/schemas/PlayerStatEntry'
 
     DraftRank:
-      description: Information about how a player was ranked in different draft formats.
+      description: Information about how a player was ranked for a draft format.
       type: object
       properties:
         auctionValue: 
-          description: Unknown
+          description: Suggested or projected auction draft budget value in dollars.
           type: integer
+          example: 15
         published:
-          description: Unknown
+          description: Whether this draft ranking was officially published by ESPN.
           type: boolean
         rank:
-          description: Unknown
+          description: The numerical overall draft rank position.
           type: integer
+          example: 45
         rankSourceId:
-          description: Unknown
+          description: Identifier for the ranking provider (0 represents ESPN default / consensus).
           type: integer
+          example: 0
         rankType:
-          description: Unknown
+          description: The draft ranking scoring format.
           $ref: "#/components/schemas/DraftRankType"
         slotId:
-          description: Unknown
+          description: The lineup slot ID the ranking is associated with (0 for overall).
           type: integer
+          example: 0
 
     DraftRankType:
-      description: Unknown
+      description: The fantasy format or scoring system used for draft rankings.
       type: string
       enum:
         - STANDARD
+        - ROTO
+
+    PlayerStatEntry:
+      description: A statistical split or projection for a player.
+      type: object
+      properties:
+        appliedAverage:
+          description: The fantasy points average applied for this stat split.
+          type: number
+          format: float
+        appliedTotal:
+          description: Total applied fantasy points scored in this stat split.
+          type: number
+          format: float
+        externalId:
+          description: An identifier referencing the season year or external game ID.
+          type: string
+          example: "2027"
+        id:
+          description: Unique compound identifier for this stat record.
+          type: string
+          example: "002027"
+        proTeamId:
+          description: The NBA team ID the player was on for this stat record.
+          type: integer
+        scoringPeriodId:
+          description: The scoring period (matchup period) this stat record belongs to.
+          type: integer
+        seasonId:
+          description: The season year for this stat record.
+          type: integer
+        statSourceId:
+          description: Indicator of whether stats are actual (0) or projected (1).
+          type: integer
+          enum:
+            - 0 # Actual
+            - 1 # Projected
+        statSplitTypeId:
+          description: The time window or scope of the statistics.
+          type: integer
+          enum:
+            - 0 # Full season total
+            - 1 # Last 7 days
+            - 2 # Last 15 days
+            - 3 # Last 30 days
+            - 5 # Single game box score
+        stats:
+          $ref: './shared-components.yml#/components/schemas/BasketballStats'
         
