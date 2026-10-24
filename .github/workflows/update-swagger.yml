@@ -12,7 +12,7 @@ jobs:
   updateSwagger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Get Latest Swagger UI Release
         working-directory: docs
         id: swagger-ui
@@ -59,7 +59,7 @@ jobs:
           echo "$RELEASE_TAG" > swagger-ui.version
       - name: Create Pull Request
         if: steps.swagger-ui.outputs.current_tag != steps.swagger-ui.outputs.release_tag
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: Update swagger-ui to ${{ steps.swagger-ui.outputs.release_tag }}
           title: Update SwaggerUI to ${{ steps.swagger-ui.outputs.release_tag }}
