@@ -17,7 +17,8 @@ docs/
 │   ├── shared-components.yml # Common schemas shared across multiple views/endpoints
 │   ├── no-view-league.yml  # Schema for default league response (no view parameter)
 │   ├── mteam-league.yml    # Schema for league response with view=mTeam
-│   └── mroster-league.yml  # Schema for league response with view=mRoster
+│   ├── mroster-league.yml  # Schema for league response with view=mRoster
+│   └── mmatchup-league.yml # Schema for league response with view=mMatchup
 ├── ui/                     # Pre-built Swagger UI distribution assets (CSS, JS)
 │   └── swagger-initializer.js # Configures Swagger UI to load openapi/open-api.yml
 ├── swagger-ui.version      # Tracks the currently bundled Swagger UI release tag
