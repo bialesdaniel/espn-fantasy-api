@@ -1,0 +1,186 @@
+openapi: 3.0.3
+components:
+  schemas:
+    MMatchupLeagueResponse:
+      description:
+        The response returned when the view query parameter is mMatchup.
+      allOf:
+        - $ref: './shared-components.yml#/components/schemas/BasicLeagueResponse'
+        - type: object
+          properties:
+            draftDetail:
+              $ref: './shared-components.yml#/components/schemas/DraftDetails'
+            status:
+              $ref: './shared-components.yml#/components/schemas/LeagueStatusDetailed'
+            schedule:
+              description: A list of all scheduled matchups across the fantasy season.
+              type: array
+              items:
+                $ref: '#/components/schemas/Matchup'
+            teams:
+              description: The teams in the league alongside their active rosters.
+              type: array
+              items:
+                $ref: '#/components/schemas/MMatchupLeagueTeam'
+
+    MMatchupLeagueTeam:
+      description:
+        The league team object returned when view=mMatchup, containing the team ID and its current roster.
+      type: object
+      properties:
+        id:
+          description: A unique identifier specific to the team, league, and season.
+          type: integer
+          minimum: 1
+          example: 1
+        roster:
+          description: Current active roster of the team.
+          $ref: './shared-components.yml#/components/schemas/Roster'
+
+    Matchup:
+      description: A scheduled head-to-head fantasy matchup for a specific period.
+      type: object
+      properties:
+        id:
+          description: Unique numeric identifier for the matchup within the fantasy season.
+          type: integer
+          example: 1
+        matchupPeriodId:
+          description: The matchup period / week number (e.g. 1-18+).
+          type: integer
+          example: 1
+        winner:
+          description: The outcome or winning side of the matchup.
+          $ref: '#/components/schemas/MatchupWinner'
+        playoffTierType:
+          description: The playoff bracket classification if this matchup is part of the playoffs.
+          $ref: '#/components/schemas/PlayoffTierType'
+        home:
+          description: The designated home team in the matchup.
+          $ref: '#/components/schemas/MatchupTeam'
+        away:
+          description:
+            The designated away team in the matchup. Can be null if a team has a playoff bye.
+          $ref: '#/components/schemas/MatchupTeam'
+          nullable: true
+
+    MatchupWinner:
+      description: The outcome or winning side of the matchup.
+      type: string
+      enum:
+        - HOME
+        - AWAY
+        - TIE
+        - UNDECIDED
+
+    PlayoffTierType:
+      description: The playoff bracket or consolation tier of the matchup.
+      type: string
+      enum:
+        - NONE
+        - WINNERS_BRACKET
+        - WINNERS_CONSOLATION_LADDER
+        - LOSERS_CONSOLATION_LADDER
+
+    MatchupTeam:
+      description: A team's scoring, category breakdown, and roster state for a matchup.
+      type: object
+      properties:
+        teamId:
+          description: The league-specific identifier of the fantasy team.
+          type: integer
+          example: 11
+        totalPoints:
+          description: Total fantasy points scored by the team in this matchup period.
+          type: number
+          format: float
+          example: 615.0
+        gamesPlayed:
+          description: Total player games played during this matchup period.
+          type: integer
+          example: 32
+        pointsByScoringPeriod:
+          description:
+            A map of scoring period ID (day number) to the fantasy points scored on that day.
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          example:
+            '1': 21.0
+            '2': 201.0
+            '3': 21.0
+            '4': 185.0
+        cumulativeScore:
+          description: Win/loss/tie outcomes and per-category scoring breakdown in this matchup.
+          $ref: '#/components/schemas/MatchupCumulativeScore'
+        rosterForCurrentScoringPeriod:
+          description:
+            The active roster for today's current scoring period (populated for in-progress matchup periods).
+          $ref: './shared-components.yml#/components/schemas/Roster'
+          nullable: true
+        rosterForMatchupPeriod:
+          description:
+            The final locked roster and lineup for this matchup period.
+          $ref: './shared-components.yml#/components/schemas/Roster'
+          nullable: true
+        rosterForMatchupPeriodDelayed:
+          description:
+            Delayed scoring roster snapshot for post-game stat corrections.
+          $ref: './shared-components.yml#/components/schemas/Roster'
+          nullable: true
+
+    MatchupCumulativeScore:
+      description: Aggregated category or scoring results for a team in a matchup.
+      type: object
+      properties:
+        wins:
+          description: Total category wins in this matchup.
+          type: integer
+          example: 5
+        losses:
+          description: Total category losses in this matchup.
+          type: integer
+          example: 4
+        ties:
+          description: Total tied categories in this matchup.
+          type: integer
+          example: 0
+        statBySlot:
+          description: Optional scoring breakdown grouped by lineup slot.
+          type: object
+          nullable: true
+        scoreByStat:
+          description:
+            Map of stat ID (keyed by BasketballStats ID) to the team's score, rank, and result in that category.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MatchupStat'
+
+    MatchupStat:
+      description: Details for a single statistical category in a matchup.
+      type: object
+      properties:
+        score:
+          description: The team's total in this category during the matchup.
+          type: number
+          format: float
+          example: 523.0
+        rank:
+          description: Rank of the team in this category relative to opponent or league.
+          type: number
+          format: float
+          example: 1.0
+        result:
+          description: Outcome of this specific category in the head-to-head matchup.
+          type: string
+          enum:
+            - WIN
+            - LOSS
+            - TIE
+          nullable: true
+        ineligible:
+          description: Whether this category stat was marked ineligible for scoring.
+          type: boolean
+          example: false
+

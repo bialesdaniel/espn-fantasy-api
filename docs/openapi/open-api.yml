@@ -54,12 +54,14 @@ paths:
                   - $ref: './no-view-league.yml#/components/schemas/NoViewLeagueResponse'
                   - $ref: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
                   - $ref: './mroster-league.yml#/components/schemas/MRosterLeagueResponse'
+                  - $ref: './mmatchup-league.yml#/components/schemas/MMatchupLeagueResponse'
                 discriminator:
                   propertyName: view
                   mapping:
                     basic: './no-view-league.yml#/components/schemas/NoViewLeagueResponse'
                     mTeam: './mteam-league.yml#/components/schemas/MTeamLeagueResponse'
                     mRoster: './mroster-league.yml#/components/schemas/MRosterLeagueResponse'
+                    mMatchup: './mmatchup-league.yml#/components/schemas/MMatchupLeagueResponse'
 
 components:
   schemas:
